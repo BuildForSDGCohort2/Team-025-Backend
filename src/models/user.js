@@ -1,33 +1,34 @@
+/* eslint-disable linebreak-style */
 const mongoose = require('mongoose');
 
 UserSchema = new mongoose.Schema(
 
 {
-  Name{
+  Name:{
     type: String,
     required: true
   },
-  email{
+  email:{
     type: String,
     required: true
   },
-  city{
+  city:{
     type: String,
     required: true
   },
-  phone{
+  phone:{
     type: String,
     required:true
   },
-  bloodgroup{
+  bloodgroup:{
     type: String,
     required: true
   },
-  address{
+  address:{
     type: String,
     required: true
   }
    
 });
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model("user", UserSchema);

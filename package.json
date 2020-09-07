@@ -41,6 +41,7 @@
     "graphql": "^0.13.2",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "jsdom": "^16.4.0",
     "mongodb": "^3.5.1",
     "mongoose": "^5.10.2",
     "morgan": "~1.9.1",

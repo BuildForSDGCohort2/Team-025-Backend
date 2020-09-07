@@ -1,3 +1,7 @@
+/**
+ * @jest-environment jsdom
+ */
+
 import app from '../src/index';
 
 describe('app module', () => {

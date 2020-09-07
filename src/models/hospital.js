@@ -1,27 +1,28 @@
 const mongoose = require('mongoose');
 
-var hospitalSchema = new mongoose(
+var hospitalSchema = new mongoose.Schema(
 {
 	name:{
-		type: String
-		required: true
-	},
-	city{
 		type: String,
 		required: true
 	},
-	address{
+	city:{
 		type: String,
 		required: true
 	},
-	phone{
+	address:{
 		type: String,
 		required: true
 	},
-	email{
+	phone:{
+		type: String,
+		required: true
+	},
+	email:{
 		type: String,
 		required: true
 	}
 
 
 })
+module.exports = mongoose.model("hospital", hospitalSchema);
