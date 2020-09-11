@@ -1,4 +1,5 @@
 import app from './app_old';
+var jsdom = require('jsdom');
 
 const startApp = async () => {
   const header = document.querySelector('[data-app-name]');
