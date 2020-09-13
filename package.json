@@ -17,7 +17,7 @@
     "test:watch": "jest --watch",
     "test:cover": "jest --coverage",
     "lint": "eslint \"src/**/*.js\"",
-    "start": "node ./src/bin/www"
+    "start": "set DEBUG=app*& nodemon ./src/bin/www"
   },
   "author": {
     "name": "Build For SDG",
@@ -64,5 +64,15 @@
   },
   "browserslist": [
     "last 1 Chrome versions"
-  ]
+  ],
+  "nodemonConfig": {
+    "restartable": "rs",
+    "ignore": ["node_modules/**/node_modules"],
+    "delay": "2500",
+    "env": {
+      "NODE_ENV": "development",
+      "PORT": 4000,
+      "DBNAME": "bloodnation"
+    }
+  }
 }
