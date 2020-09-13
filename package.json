@@ -72,7 +72,8 @@
     "env": {
       "NODE_ENV": "development",
       "PORT": 4000,
-      "DBNAME": "bloodnation"
+      "DBNAME": "bloodnation",
+      "MONGO_URI": "mongodb://localhost:27017/bloodnation"
     }
   }
 }
