@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const flash = require('connect-flash');
+const bodyParser = require('body-parser');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -14,22 +15,35 @@ const User = require('./models/user');
 const bloodbank = require('./models/bloodbank');
 const hospital = require('./models/hospital');
 
-mongoose.connect('mongodb+srv://lutitech:luti4148@bloodbank.fqjdo.mongodb.net/bloodbank?retryWrites=true&w=majority');
 
 const app = express();
+
+// Database Connection
+mongoose.Promise = global.Promise;
+
+mongoose.connect('mongodb+srv://lutitech:luti4148@bloodbank.fqjdo.mongodb.net/bloodbank?retryWrites=true&w=majority',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }).then(() => {
+  console.log('Databasae Connected');
+}).catch((err) => {
+  console.log('error in connecting database');
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
 
-// Passport Config
+/**  Passport Config
 
 app.use(require('express-session')({
   secret: 'bloodnation!',
@@ -49,7 +63,7 @@ app.use((req, res, next) => {
   res.locals.success = req.flash('success');
   next();
 });
-
+*/
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
