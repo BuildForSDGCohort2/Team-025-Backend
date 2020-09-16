@@ -1,5 +1,7 @@
 const express = require('express');
 const passport = require('passport');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 const User = require('../models/user');
 const { index } = require('../controllers/index');
 const { users } = require('../controllers/users');
@@ -13,6 +15,8 @@ router.get('/', index);
 
 /* Get Signup Page */
 router.get('/signup', users);
+
+// SignUp post request
 router.post('/signup', async (req, res) => {
   const newUser = new User({
     name: req.body.name,
@@ -22,14 +26,21 @@ router.post('/signup', async (req, res) => {
   await User.findOne({ name: newUser.name })
     .then(async (profile) => {
       if (!profile) {
-        await newUser
-          .save()
-          .then(() => {
-            res.status(200).send(newUser);
-          })
-          .catch((err) => {
-            console.log('Error is ', err.message);
-          });
+        bcrypt.hash(newUser.password, saltRounds, async (err, hash) => {
+          if (err) {
+            console.log('Error is', err.message);
+          } else {
+            newUser.password = hash;
+            await newUser
+              .save()
+              .then(() => {
+                res.status(200).send(newUser);
+              })
+              .catch((err) => {
+                console.log('Error is ', err.message);
+              });
+          }
+        });
       } else {
         res.send('User already exists...');
       }
@@ -39,7 +50,10 @@ router.post('/signup', async (req, res) => {
     });
 });
 
+// Login routes
+
 router.get('/login', login);
+
 
 router.post('/login', async (req, res) => {
   const newUser = {};
@@ -50,17 +64,26 @@ router.post('/login', async (req, res) => {
     .then((profile) => {
       if (!profile) {
         res.send('User not exist');
-      } else if (profile.password == newUser.password) {
-        res.send('User authenticated');
       } else {
-        res.send('User Unauthorized Access');
+        bcrypt.compare(
+          newUser.password,
+          profile.password,
+          async (err, result) => {
+            if (err) {
+              console.log('Error is', err.message);
+            } else if (result == true) {
+              res.send('User authenticated');
+            } else {
+              res.send('User Unauthorized Access');
+            }
+          }
+        );
       }
     })
     .catch((err) => {
       console.log('Error is ', err.message);
     });
 });
-
 router.get('/logout', index);
 
 
