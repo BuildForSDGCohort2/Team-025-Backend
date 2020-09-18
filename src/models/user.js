@@ -1,20 +1,27 @@
-/* eslint-disable linebreak-style */
 const mongoose = require('mongoose');
-// const passportLocalMongoose = require('passport-local-mongoose');
 
-const UserSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true
-    },
-    password: {
-      type: String,
-      required: true
-    }
+const { Schema } = mongoose;
+
+const UserSchema = new Schema({
+  email: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  role: {
+    type: String,
+    default: 'basic',
+    enum: ['donor', 'hosipital', 'admin']
+  },
+  accessToken: {
+    type: String
   }
-);
+});
 
-// UserSchema.plugin(passportLocalMongoose);
+const User = mongoose.model('user', UserSchema);
 
-module.exports = mongoose.model('user', UserSchema);
+module.exports = User;

@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -5,9 +6,10 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const LocalStrategy = require('passport-local');
+
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
+
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -15,13 +17,16 @@ const User = require('./models/user');
 const bloodbank = require('./models/bloodbank');
 const hospital = require('./models/hospital');
 
+require('dotenv').config({
+  path: path.join(__dirname, '/.env')
+});
 
 const app = express();
 
 // Database Connection
 mongoose.Promise = global.Promise;
 
-mongoose.connect('mongodb+srv://lutitech:luti4148@bloodbank.fqjdo.mongodb.net/bloodbank?retryWrites=true&w=majority',
+mongoose.connect('mongodb://127.0.0.1:27017/bloodbank',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -43,27 +48,25 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
 
-/**  Passport Config
 
-app.use(require('express-session')({
-  secret: 'bloodnation!',
-  resave: false,
-  saveUninitialized: false
-}));
+app.use(async (req, res, next) => {
+  if (req.headers['x-access-token']) {
+    const accessToken = req.headers['x-access-token'];
+    const { userId, exp } = await jwt.verify(accessToken, process.env.JWT_SECRET);
+    // Check if token has expired
+    if (exp < Date.now().valueOf() / 1000) {
+      return res.status(401).json({ error: 'JWT token has expired, please login to obtain a new one' });
+    }
+    res.locals.loggedInUser = await User.findById(userId); next();
+  } else {
+    next();
+  }
+});
+
+/**  Passport Config */
 
 app.use(passport.initialize());
-app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
 
-app.use((req, res, next) => {
-  res.locals.currentUser = req.user;
-  res.locals.error = req.flash('error');
-  res.locals.success = req.flash('success');
-  next();
-});
-*/
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

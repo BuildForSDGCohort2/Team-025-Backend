@@ -1,67 +1,21 @@
 const express = require('express');
-const passport = require('passport');
-const User = require('../models/user');
-const { index } = require('../controllers/index');
-const { users } = require('../controllers/users');
-const { login } = require('../controllers/login');
-const { signup } = require('../controllers/signup');
 
 const router = express.Router();
+const userController = require('../controllers/userController');
+const index = require('../controllers/index');
+const auth = require('../middleware/auth');
 
-/* GET home page. */
-router.get('/', index);
+router.post('/signup', userController.signup);
 
-/* Get Signup Page */
-router.get('/signup', users);
-router.post('/signup', async (req, res) => {
-  const newUser = new User({
-    name: req.body.name,
-    password: req.body.password
-  });
+router.post('/login', userController.login);
 
-  await User.findOne({ name: newUser.name })
-    .then(async (profile) => {
-      if (!profile) {
-        await newUser
-          .save()
-          .then(() => {
-            res.status(200).send(newUser);
-          })
-          .catch((err) => {
-            console.log('Error is ', err.message);
-          });
-      } else {
-        res.send('User already exists...');
-      }
-    })
-    .catch((err) => {
-      console.log('Error is', err.message);
-    });
-});
+router.get('/user/:userId', auth.allowIfLoggedin, userController.getUser);
 
-router.get('/login', login);
+router.get('/users', auth.allowIfLoggedin, auth.grantAccess('readAny', 'profile'), userController.getUsers);
 
-router.post('/login', async (req, res) => {
-  const newUser = {};
-  newUser.name = req.body.name;
-  newUser.password = req.body.password;
+router.put('/user/:userId', auth.allowIfLoggedin, auth.grantAccess('updateAny', 'profile'), userController.updateUser);
 
-  await User.findOne({ name: newUser.name })
-    .then((profile) => {
-      if (!profile) {
-        res.send('User not exist');
-      } else if (profile.password == newUser.password) {
-        res.send('User authenticated');
-      } else {
-        res.send('User Unauthorized Access');
-      }
-    })
-    .catch((err) => {
-      console.log('Error is ', err.message);
-    });
-});
-
-router.get('/logout', index);
+router.delete('/user/:userId', auth.allowIfLoggedin, auth.grantAccess('deleteAny', 'profile'), userController.deleteUser);
 
 
 module.exports = router;
