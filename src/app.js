@@ -16,6 +16,7 @@ const usersRouter = require('./routes/users');
 const User = require('./models/user');
 const bloodbank = require('./models/bloodbank');
 const hospital = require('./models/hospital');
+const appointment = require('./models/appointment')
 
 require('dotenv').config({
   path: path.join(__dirname, '/.env')
