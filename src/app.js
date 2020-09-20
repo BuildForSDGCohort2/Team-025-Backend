@@ -27,7 +27,7 @@ const app = express();
 // Database Connection
 mongoose.Promise = global.Promise;
 
-mongoose.connect('mongodb://127.0.0.1:27017/bloodbank',
+mongoose.connect('mongodb+srv://lutitech:luti4148@bloodbank.fqjdo.mongodb.net/bloodnation?retryWrites=true&w=majority',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true
