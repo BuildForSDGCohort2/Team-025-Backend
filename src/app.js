@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const cors = require('cors');
 
 
 const flash = require('connect-flash');
@@ -49,7 +50,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
-
+app.use(cors());
 
 app.use(async (req, res, next) => {
   if (req.headers['x-access-token']) {
