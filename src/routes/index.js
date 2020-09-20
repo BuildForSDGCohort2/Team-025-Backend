@@ -10,7 +10,7 @@ router.post('/signup', userController.signup);
 router.post('/login', userController.login);
 
 router.get('/logout', (req, res) => {
-    res.render('index', {title: 'You have logged out'})
+  res.render('index', {title: 'You have logged out'})
 })
 
 router.get('/user/:userId', auth.allowIfLoggedin, userController.getUser);
