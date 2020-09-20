@@ -1,8 +1,15 @@
-var express = require('express');
-const { users } = require('../controllers/users');
-var router = express.Router();
+const express = require('express')
+const router = express.Router();
+const auth = require('../middleware/auth');
 
-/* GET users listing. */
-router.get('/', users);
+const appointmentController = require('../controllers/appointments');
+const slotController = require('../controllers/slot');
+
+router.get('/appointments', auth.allowIfLoggedin, appointmentController.all);
+
+router.get('/retrieveSlots', auth.allowIfLoggedin, slotController.all);
+
+router.post('/appointmentCreate', auth.allowIfLoggedin, appointmentController.create);
+
 
 module.exports = router;

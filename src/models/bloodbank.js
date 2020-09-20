@@ -1,29 +1,29 @@
 /* eslint-disable no-var */
 const mongoose = require('mongoose');
 
-var bloodbankSchema = new mongoose.Schema(
+
+const bloodbankSchema = new mongoose.Schema(
   {
-    name:{
+    name: {
       type: String,
       required: true
     },
-    city:{
+    city: {
       type: String,
       required: true
     },
-    address:{
+    address: {
       type: String,
       required: true
     },
-    phone:{
+    phone: {
       type: String,
       required: true
     },
-    email:{
+    email: {
       type: String,
       required: true
     }
-
-
-  })
-module.exports = mongoose.model("bloodbank", bloodbankSchema);
+  }
+);
+module.exports = mongoose.model('bloodbank', bloodbankSchema);
