@@ -7,6 +7,7 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const passport = require('passport');
 
+
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
 
@@ -19,7 +20,7 @@ const hospital = require('./models/hospital');
 const appointment = require('./models/appointment')
 
 require('dotenv').config({
-  path: path.join(__dirname, '/.env')
+  path: path.join(__dirname, '../.env')
 });
 
 const app = express();
@@ -27,7 +28,7 @@ const app = express();
 // Database Connection
 mongoose.Promise = global.Promise;
 
-mongoose.connect('mongodb+srv://lutitech:luti4148@bloodbank.fqjdo.mongodb.net/bloodnation?retryWrites=true&w=majority',
+mongoose.connect(process.env.MONGO_URI,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true
