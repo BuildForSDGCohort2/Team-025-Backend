@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const cors = require('cors');
+
 
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
@@ -19,7 +21,7 @@ const hospital = require('./models/hospital');
 const appointment = require('./models/appointment')
 
 require('dotenv').config({
-  path: path.join(__dirname, '/.env')
+  path: path.join(__dirname, '../.env')
 });
 
 const app = express();
@@ -27,7 +29,7 @@ const app = express();
 // Database Connection
 mongoose.Promise = global.Promise;
 
-mongoose.connect('mongodb://127.0.0.1:27017/bloodbank',
+mongoose.connect(process.env.MONGO_URI,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -48,7 +50,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
-
+app.use(cors());
 
 app.use(async (req, res, next) => {
   if (req.headers['x-access-token']) {
