@@ -7,38 +7,33 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const cors = require('cors');
-
+const jwt = require('jsonwebtoken');
 
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
 
-
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 const User = require('./models/user');
-const bloodbank = require('./models/bloodbank');
-const hospital = require('./models/hospital');
-const appointment = require('./models/appointment')
+const routes = require('./routes/index');
 
-require('dotenv').config({
-  path: path.join(__dirname, '../.env')
-});
+const router = express.Router();
+routes(router);
+
+require('dotenv').config();
 
 const app = express();
 
 // Database Connection
 mongoose.Promise = global.Promise;
-
-mongoose.connect(process.env.MONGO_URI,
+mongoose.connect(process.env.MONGO_URL,
   {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
   }).then(() => {
   console.log('Databasae Connected');
 }).catch((err) => {
-  console.log('error in connecting database');
+  console.log('error in connecting database', err);
 });
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -71,8 +66,8 @@ app.use(async (req, res, next) => {
 app.use(passport.initialize());
 
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api/v1', router);
+// app.use('/users', usersRouter);
 
 
 // catch 404 and forward to error handler
