@@ -1,15 +1,20 @@
-const express = require('express')
-const router = express.Router();
+const userController = require('../controllers/userController');
 const auth = require('../middleware/auth');
+const { emailVerificationMiddleware } = require('../middleware/emailVerificationMiddleware');
+const { regMiddleware } = require('../middleware/regMiddleware');
 
-const appointmentController = require('../controllers/appointments');
-const slotController = require('../controllers/slot');
+const userRoutes = (router) => {
 
-router.get('/appointments', auth.allowIfLoggedin, appointmentController.all);
+  router.use(emailVerificationMiddleware);
+  router.use(regMiddleware);
 
-router.get('/retrieveSlots', auth.allowIfLoggedin, slotController.all);
+  router.route('/users')
+    .get(auth.allowIfLoggedin, auth.grantAccess('readAny', 'profile'), userController.getUsers);
 
-router.post('/appointmentCreate', auth.allowIfLoggedin, appointmentController.create);
+  router.route('/users/:userId')
+    .get(auth.allowIfLoggedin, userController.getUser)
+    .post(auth.allowIfLoggedin, auth.grantAccess('updateAny', 'profile'), userController.updateUser)
+    .delete(auth.allowIfLoggedin, auth.grantAccess('deleteAny', 'profile'), userController.deleteUser)
+};
 
-
-module.exports = router;
+module.exports = userRoutes;
