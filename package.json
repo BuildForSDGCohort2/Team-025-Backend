@@ -88,7 +88,8 @@
       "NODE_ENV": "development",
       "PORT": 4000,
       "DBNAME": "bloodnation",
-      "MONGO_URI": "mongodb://localhost:27017/bloodnation"
+      "MONGO_URI_OLD": "mongodb://localhost:27017/bloodnation",
+      "MONGO_URI": "mongodb+srv://lutitech:luti4148@bloodbank.fqjdo.mongodb.net/bloodnation?retryWrites=true&w=majority"
     }
   }
 }
