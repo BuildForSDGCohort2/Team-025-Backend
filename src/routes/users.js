@@ -1,8 +1,19 @@
-var express = require('express');
-const { users } = require('../controllers/users');
-var router = express.Router();
+const userController = require('../controllers/userController');
+const auth = require('../middleware/auth');
+const { emailVerificationMiddleware } = require('../middleware/emailVerificationMiddleware');
+const { roles } = require('../roles');
 
-/* GET users listing. */
-router.get('/', users);
+const userRoutes = (router) => {
 
-module.exports = router;
+  router.use(emailVerificationMiddleware);
+
+  router.route('/users')
+    .get(auth.allowIfLoggedin, auth.grantAccess('readAny', 'profile'), userController.getUsers);
+
+  router.route('/users/:userId')
+    .get(auth.allowIfLoggedin, userController.getUser)
+    .post(auth.allowIfLoggedin, auth.grantAccess(roles.can('donor').updateOwn('profile')), userController.updateUser)
+    .delete(auth.allowIfLoggedin, auth.grantAccess('deleteAny', 'profile'), userController.deleteUser);
+};
+
+module.exports = userRoutes;
