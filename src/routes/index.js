@@ -1,25 +1,16 @@
-const express = require('express');
+const appointmentRoutes = require('./appointments');
+const authRoute = require('./auth');
+const hospitalRoutes = require('./hospitals');
+const userRoutes = require('./users');
 
-const router = express.Router();
-const userController = require('../controllers/userController');
-const index = require('../controllers/index');
-const auth = require('../middleware/auth');
+const routes = (router) => {
+  router.route('/')
+    .get((_, res) => res.status(200).json({ message: 'welcome to bloodnation api v1' }));
 
-router.post('/signup', userController.signup);
+  authRoute(router);
+  userRoutes(router);
+  appointmentRoutes(router);
+  hospitalRoutes(router);
+};
 
-router.post('/login', userController.login);
-
-router.get('/logout', (req, res) => {
-  res.render('index', {title: 'You have logged out'})
-})
-
-router.get('/user/:userId', auth.allowIfLoggedin, userController.getUser);
-
-router.get('/users', auth.allowIfLoggedin, auth.grantAccess('readAny', 'profile'), userController.getUsers);
-
-router.put('/user/:userId', auth.allowIfLoggedin, auth.grantAccess('updateAny', 'profile'), userController.updateUser);
-
-router.delete('/user/:userId', auth.allowIfLoggedin, auth.grantAccess('deleteAny', 'profile'), userController.deleteUser);
-
-
-module.exports = router;
+module.exports = routes;

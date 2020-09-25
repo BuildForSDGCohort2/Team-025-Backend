@@ -1,12 +1,18 @@
 const mongoose = require('mongoose');
 
-const hospitalSchema = new mongoose.Schema(
+const { Schema } = mongoose;
+
+const HospitalSchema = new Schema(
   {
     name: {
       type: String,
       required: true
     },
-    city: {
+    state: {
+      type: String,
+      required: true
+    },
+    lg: {
       type: String,
       required: true
     },
@@ -21,9 +27,13 @@ const hospitalSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true
-    }
-
-
+    },
+    latitude: String,
+    longitude: String,
+    appointments: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Appointment'
+    }]
   }
 );
-module.exports = mongoose.model('hospital', hospitalSchema);
+module.exports = mongoose.model('Hospital', HospitalSchema);
