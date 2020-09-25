@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 
 
-const bloodbankSchema = new mongoose.Schema(
+const BloodbankSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -26,4 +26,4 @@ const bloodbankSchema = new mongoose.Schema(
     }
   }
 );
-module.exports = mongoose.model('bloodbank', bloodbankSchema);
+module.exports = mongoose.model('Bloodbank', BloodbankSchema);

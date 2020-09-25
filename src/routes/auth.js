@@ -8,7 +8,9 @@ const authRoute = (router) => {
     .post(userController.login);
 
   router.route('/verification/email')
-    .get(userController.confirmVerification)
+    .post(userController.confirmVerification);
+
+  router.route('/verification/email/resend')
     .post(userController.reSendVerification);
 
   router.route('/logout')
