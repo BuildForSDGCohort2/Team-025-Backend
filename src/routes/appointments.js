@@ -10,7 +10,7 @@ const appointmentRoutes = (router) => {
   router.route('/retrieveSlots')
     .get(auth.allowIfLoggedin, slotController.all)
 
-  router.route('/appointmentCreate')
+  router.route('/appointments')
     .post(auth.allowIfLoggedin, appointmentController.create)
 
 }

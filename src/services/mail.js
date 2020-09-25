@@ -26,7 +26,7 @@ exports.sendVerificationMail = async (user) => {
   });
 
   const info = await transporter.sendMail({
-    from: '"BloodNation 👻" <larrysnet2001@gmail.com>',
+    from: '"BloodNation 👻" <info@bloodnation.com>',
     to: user.email,
     subject: 'Welcome to BloodNation',
     // text: 'Hello world?',
@@ -40,7 +40,7 @@ exports.sendVerificationMail = async (user) => {
 
     <p>No matter the distance or state you reside, you can be sure that you'll find the bloodbank or hospital that you need... and maybe a few that you didn't even know you needed yet!</p>
 
-    <p>Click this link to complete your registration<: <a href="${link}">Confirm Registration</a></p>
+    <p>Click this link to complete your registration <a href="${link}">Confirm Registration</a></p>
 
     <p>Regards<br/>Dino Rhythms</p>
     `

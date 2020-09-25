@@ -24,6 +24,14 @@ const UserSchema = new Schema({
     type: String,
     default: ''
   },
+  state: {
+    type: String,
+    default: ''
+  },
+  lg: {
+    type: String,
+    default: ''
+  },
   address: {
     type: String,
     default: ''
@@ -63,14 +71,18 @@ const UserSchema = new Schema({
   },
   role: {
     type: String,
-    default: 'donor',
-    enum: ['donor', 'hosipital', 'admin']
+    default: 'user',
+    enum: ['user', 'hosipital', 'admin']
   },
   accessToken: {
     type: String
-  }
+  },
+  appointments: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Appointment'
+  }]
 });
 
-const User = mongoose.model('user', UserSchema);
+const User = mongoose.model('User', UserSchema);
 
 module.exports = User;

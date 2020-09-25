@@ -1,5 +1,5 @@
-const { Appointment, Slot } = require('../models/appointment');
 const Nexmo = require('nexmo');
+const Appointment = require('../models/appointment');
 
 const appointmentController = {
   all(req, res) {
@@ -7,20 +7,17 @@ const appointmentController = {
     Appointment.find({}).exec((err, appointments) => res.json(appointments));
   },
   create(req, res) {
-    const requestBody = req.body;
+    const { state, lg, hospital, date, comment
+    } = req.body;
+    const user = res.locals.loggedInUser;
 
-    const newslot = new Slot({
-      slot_time: requestBody.slot_time,
-      slot_date: requestBody.slot_date,
-      created_at: Date.now()
-    });
-    newslot.save();
     // Creates a new record from a submitted form
     const newappointment = new Appointment({
-      name: requestBody.name,
-      email: requestBody.email,
-      phone: requestBody.phone,
-      slots: newslot._id
+      state,
+      lg,
+      hospital,
+      user: user._id,
+      comment
     });
 
     const nexmo = new Nexmo({
@@ -28,11 +25,11 @@ const appointmentController = {
       apiSecret: 'YvX2lYk6utkevmfaI'
     });
 
-    const msg = `${requestBody.name
+    const msg = `${user.name
     } `
       + 'this message is to confirm your appointment at'
       + ` ${
-        requestBody.appointment}`;
+        date}`;
 
     // and saves the record to
     // the data base
@@ -40,8 +37,12 @@ const appointmentController = {
       // Returns the saved appointment
       // after a successful save
       Appointment.find({ _id: saved._id })
-        .populate('slots')
-        .exec((err, appointment) => res.json(appointment));
+        .populate('hospital')
+        .exec((err, appointment) => res.status(200).json({
+          status: 'success',
+          message: 'successfully',
+          appointment
+        }));
 
       const from = 'Vonage APIs';
       const to = '2348079398930';

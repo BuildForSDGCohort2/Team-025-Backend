@@ -1,30 +1,24 @@
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema,
-  model = mongoose.model.bind(mongoose),
-  ObjectId = mongoose.Schema.Types.ObjectId;
+const { Schema } = mongoose;
+const model = mongoose.model.bind(mongoose);
+const { ObjectId } = mongoose.Schema.Types;
 
-
-  const slotSchema = new Schema ({
-    slot_time: String,
-    slot_date: String,
-    created_at: Date
-  });
-
-const Slot = model('Slot', slotSchema);
-
-const appointmentSchema = new Schema({
-  id: ObjectId,
-  name: String,
-  email: String,
-  phone: Number,
-  slots:{type: ObjectId, ref: 'Slot'},
-  created_at: Date
+const AppointmentSchema = new Schema({
+  comment: String,
+  progress: { type: String, default: '0' },
+  status: {
+    type: String,
+    default: 'start',
+    enum: ['start', 'accepted', 'rejected', 'pending', 'completed']
+  },
+  date: Date,
+  user: { type: ObjectId, ref: 'User' },
+  hospital: { type: ObjectId, ref: 'Hospital' },
+  createdAt: { type: Date, default: new Date() },
+  updatedAt: { type: Date, default: new Date() }
 });
 
-const Appointment = model('Appointment', appointmentSchema);
+const Appointment = model('Appointment', AppointmentSchema);
 
-module.exports= {
-  Appointment,
-  Slot
-}
+module.exports = Appointment;
