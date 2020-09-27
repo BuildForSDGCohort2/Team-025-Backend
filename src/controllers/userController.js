@@ -58,7 +58,7 @@ exports.reSendVerification = async (req, res) => {
       });
     }
     await sendVerificationMail(user);
-    res.status(201).json({
+    return res.status(201).json({
       status: 'success',
       message: 'verification mail sent successfully',
       data: []
@@ -128,7 +128,7 @@ exports.login = async (req, res) => {
     if (!validPassword) {
       return res.status(401).json({
         status: 'error',
-        message: 'Email does not exist',
+        message: 'invalid credentials',
         data: []
       });
     }

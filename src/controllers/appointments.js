@@ -3,11 +3,26 @@ const Appointment = require('../models/appointment');
 
 const appointmentController = {
   all(req, res) {
-    // Returns all appointments
-    Appointment.find({}).exec((err, appointments) => res.json(appointments));
+    // Returns all appointments of user
+    const user = res.locals.loggedInUser;
+    Appointment.find({ user: user._id }).populate('hospital').exec((err, appointments) => res.status(201).json({
+      status: 'success',
+      message: 'appointment successful',
+      data: appointments
+    }));
+  },
+  one(req, res) {
+    // Returns all appointments of user
+    const user = res.locals.loggedInUser;
+    const { id } = req.params;
+    Appointment.findOne({ user: user._id, _id: id }).populate('hospital').exec((err, appointment) => res.status(201).json({
+      status: 'success',
+      message: 'appointment successful',
+      data: appointment
+    }));
   },
   create(req, res) {
-    const { state, lg, hospital, date, comment
+    const { state, lg, hospital, date, comment, type
     } = req.body;
     const user = res.locals.loggedInUser;
 
@@ -17,7 +32,9 @@ const appointmentController = {
       lg,
       hospital,
       user: user._id,
-      comment
+      comment,
+      type,
+      date
     });
 
     const nexmo = new Nexmo({
