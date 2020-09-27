@@ -30,7 +30,7 @@ const bloodSchema = mongoose.Schema(
     status: { type: BloodStatus, default: BloodStatus.AVAILABLE },
     shortLocation: { type: String, required: true, max: 32 },
     fullLocation: { type: String, required: true, max: 512 },
-    qautity: { type: Number, required: true },
+    unit: { type: Number, required: true },
     beneficiary: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

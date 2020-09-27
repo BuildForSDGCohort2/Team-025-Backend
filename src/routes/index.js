@@ -2,6 +2,7 @@ const appointmentRoutes = require('./appointments');
 const authRoute = require('./auth');
 const hospitalRoutes = require('./hospitals');
 const userRoutes = require('./users');
+const requestRoutes = require('./requestRoute')
 
 const routes = (router) => {
   router.route('/')
@@ -11,6 +12,7 @@ const routes = (router) => {
   userRoutes(router);
   appointmentRoutes(router);
   hospitalRoutes(router);
+  requestRoutes(router)
 };
 
 module.exports = routes;

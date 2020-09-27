@@ -1,79 +1,35 @@
 const express = require("express");
-// const { celebrate, Segments } = require("celebrate");
-
-const requestRouter = express.Router();
-
-// const roleMiddleware = require("../middlewares/role.middleware");
 const requestController = require("../controllers/requestController");
-// const { UserRole } = require("../models/user.model");
-// const { landReqDtoSchema, updateReqDtoSchema } = require("../validations/land_request.schema");
+const auth = require('../middleware/auth');
 
-// Only farmers should be able to make a land-request
-function requestRoutes() {
-  requestRouter.route("/")
-    .post(requestController.createRequest)
+const requestRoutes = (router) => {
 
-  return requestRouter;
+  router.route('/request')
+    .post(auth.allowIfLoggedin, requestController.createRequest)
+    .put(auth.allowIfLoggedin, requestController.modifyRequest)
+
+  router.route('/request/:request_id')
+    .get(auth.allowIfLoggedin, requestController.getRequest)
+    .post(auth.allowIfLoggedin, requestController.createRequestForAvailableBlood)
+    .post(auth.allowIfLoggedin, requestController.replyRequest)
+    .post(auth.allowIfLoggedin, requestController.addVolunteer)
+    .post(auth.allowIfLoggedin, requestController.updateRequestStatus)
+    .post(auth.allowIfLoggedin, requestController.volunteerToDonate)
+
+  router.route('/requests')
+    .get(auth.allowIfLoggedin, requestController.getAllRequests)
+
+  router.route('/request/:email')
+    .get(auth.allowIfLoggedin, requestController.getMyRequests)
+
+  router.route('/blood_id/requests')
+    .get(auth.allowIfLoggedin, requestController.getAllHospitalRequests)
+
+  router.route('/request/:request_id/:volunteer_id')
+    .post(auth.allowIfLoggedin, requestController.donated)
+    .post(auth.allowIfLoggedin, requestController.notDonated)
+
 }
 
-router.post(
-  "/",
-  // roleMiddleware({ allowedRoles: [UserRole.Farmer] }),
-  // celebrate({ [Segments.BODY]: landReqDtoSchema }),
-  BloodRequest.createRequest
-);
-
-// Farmer land request operations
-router.get(
-  "/farmer_land_requests",
-  roleMiddleware({ allowedRoles: [UserRole.Farmer] }),
-  LandRequest.getAllFarmerLandRequests
-);
-router.get(
-  "/farmer_land_requests/:request_id",
-  roleMiddleware({ allowedRoles: [UserRole.Farmer] }),
-  LandRequest.getOneFarmerLandRequest
-);
-router.delete(
-  "/farmer_land_requests/:request_id",
-  roleMiddleware({ allowedRoles: [UserRole.Farmer] }),
-  LandRequest.deleteFarmerLandRequest
-);
-
-// Landowner land-request operations
-router.get(
-  "/requests_to_landowner",
-  roleMiddleware({ allowedRoles: [UserRole.Landowner] }),
-  LandRequest.getAllLandownerLandRequests
-);
-router.get(
-  "/requests_to_landowner/:request_id",
-  roleMiddleware({ allowedRoles: [UserRole.Landowner] }),
-  LandRequest.getOneFarmerLandRequest
-);
-router.put(
-  "/requests_to_landowner/:request_id",
-  roleMiddleware({ allowedRoles: [UserRole.Landowner] }),
-  celebrate({ [Segments.BODY]: updateReqDtoSchema }),
-  LandRequest.modifyLandRequest
-);
-// Strictly admin operations on land-requests
-router.get("/land_requests", roleMiddleware({ allowedRoles: [UserRole.Admin] }), LandRequest.getAllLandRequests);
-router.get(
-  "/land_requests/:id",
-  roleMiddleware({ allowedRoles: [UserRole.Admin] }),
-  LandRequest.getOneFarmerLandRequest
-);
-router.put(
-  "/land_requests/:request_id",
-  roleMiddleware({ allowedRoles: [UserRole.Admin] }),
-  celebrate({ [Segments.BODY]: updateReqDtoSchema }),
-  LandRequest.modifyLandRequest
-);
-router.delete(
-  "/land_requests/:request_id",
-  roleMiddleware({ allowedRoles: [UserRole.Admin] }),
-  LandRequest.deleteFarmerLandRequest
-);
 
 module.exports = requestRoutes;
