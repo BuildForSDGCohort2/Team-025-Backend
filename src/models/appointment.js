@@ -6,13 +6,17 @@ const { ObjectId } = mongoose.Schema.Types;
 
 const AppointmentSchema = new Schema({
   comment: String,
-  progress: { type: String, default: '0' },
+  progress: { type: String, default: '25' },
   status: {
     type: String,
     default: 'start',
     enum: ['start', 'accepted', 'rejected', 'pending', 'completed']
   },
   date: Date,
+  type: {
+    type: String,
+    enum: ['bank', 'receiver']
+  },
   user: { type: ObjectId, ref: 'User' },
   hospital: { type: ObjectId, ref: 'Hospital' },
   createdAt: { type: Date, default: new Date() },
