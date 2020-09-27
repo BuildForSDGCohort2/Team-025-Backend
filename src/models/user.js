@@ -1,34 +1,88 @@
-/* eslint-disable linebreak-style */
 const mongoose = require('mongoose');
 
-UserSchema = new mongoose.Schema(
+const { Schema } = mongoose;
 
-{
-  Name:{
+const UserSchema = new Schema({
+  email: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  password: {
     type: String,
     required: true
   },
-  email:{
+  firstname: {
     type: String,
-    required: true
+    default: ''
   },
-  city:{
+  lastname: {
     type: String,
-    required: true
+    default: ''
   },
-  phone:{
+  phone: {
     type: String,
-    required:true
+    default: ''
   },
-  bloodgroup:{
+  state: {
     type: String,
-    required: true
+    default: ''
   },
-  address:{
+  lg: {
     type: String,
-    required: true
-  }
-   
+    default: ''
+  },
+  address: {
+    type: String,
+    default: ''
+  },
+  profileImage: {
+    type: String,
+    default: ''
+  },
+  emailVerifiedAt: {
+    type: Date
+  },
+  verificationToken: {
+    type: String
+  },
+  bloodVerifiedAt: {
+    type: Date
+  },
+  bloodVerifiedBy: {
+    type: String,
+    default: ''
+  },
+  bloodGroup: {
+    type: String,
+    default: ''
+  },
+  createdAt: {
+    type: Date,
+    default: new Date()
+  },
+  updatedAt: {
+    type: Date,
+    default: new Date()
+  },
+  active: {
+    type: Number,
+    default: 1
+  },
+  role: {
+    type: String,
+    default: 'user',
+    enum: ['user', 'hosipital', 'admin']
+  },
+  accessToken: {
+    type: String
+  },
+  appointments: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Appointment'
+  }]
 });
 
-module.exports = mongoose.model("user", UserSchema);
+const User = mongoose.model('User', UserSchema);
+
+module.exports = User;
