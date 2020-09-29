@@ -3,7 +3,6 @@ const slotController = require('../controllers/slot');
 const auth = require('../middleware/auth');
 
 const appointmentRoutes = (router) => {
-
   router.route('/appointments')
     .get(auth.allowIfLoggedin, appointmentController.all);
 
@@ -15,7 +14,6 @@ const appointmentRoutes = (router) => {
 
   router.route('/appointments')
     .post(auth.allowIfLoggedin, appointmentController.create);
-
-}
+};
 
 module.exports = appointmentRoutes;

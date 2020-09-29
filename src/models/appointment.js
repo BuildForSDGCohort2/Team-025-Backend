@@ -9,8 +9,8 @@ const AppointmentSchema = new Schema({
   progress: { type: String, default: '25' },
   status: {
     type: String,
-    default: 'start',
-    enum: ['start', 'accepted', 'rejected', 'pending', 'completed']
+    default: 'pending',
+    enum: ['pending', 'accepted', 'rejected', 'pending', 'completed']
   },
   date: Date,
   type: {
@@ -18,6 +18,7 @@ const AppointmentSchema = new Schema({
     enum: ['bank', 'receiver']
   },
   user: { type: ObjectId, ref: 'User' },
+  beneficiary: { type: ObjectId, ref: 'User' },
   hospital: { type: ObjectId, ref: 'Hospital' },
   createdAt: { type: Date, default: new Date() },
   updatedAt: { type: Date, default: new Date() }

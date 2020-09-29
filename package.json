@@ -48,6 +48,7 @@
     "googleapis": "^59.0.0",
     "graphql": "^0.13.2",
     "http-errors": "~1.6.3",
+    "http-status-codes": "^2.1.4",
     "jade": "~1.11.0",
     "jsdom": "^16.4.0",
     "jsonwebtoken": "^8.5.1",
@@ -89,8 +90,7 @@
     "delay": "2500",
     "env": {
       "NODE_ENV": "development",
-      "PORT": 4000,
-      "DBNAME": "bloodnation"
+      "PORT": 4000
     }
   }
 }

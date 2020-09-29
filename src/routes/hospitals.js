@@ -1,4 +1,4 @@
-const appointmentController = require('../controllers/appointments');
+// const appointmentController = require('../controllers/appointments');
 const { all, one, byLg } = require('../controllers/hospitalController');
 const auth = require('../middleware/auth');
 

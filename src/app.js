@@ -30,7 +30,7 @@ mongoose.connect(process.env.MONGO_URL,
     useUnifiedTopology: true,
     useFindAndModify: false
   }).then(() => {
-  console.log('Databasae Connected');
+  console.log('Database Connected Successfully');
 }).catch((err) => {
   console.log('error in connecting database', err);
 });
