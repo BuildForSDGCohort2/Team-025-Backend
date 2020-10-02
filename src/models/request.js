@@ -1,51 +1,24 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const BloodRequestStatus = {
-  DECLINED: "DECLINED",
-  APPROVED: "APPROVED",
-  PENDING: "PENDING",
-  COMPLETED: "COMPLETED"
-};
+const { Schema } = mongoose;
+const model = mongoose.model.bind(mongoose);
+const { ObjectId } = mongoose.Schema.Types;
 
-const bloodRequestSchema = mongoose
-  .Schema(
-    {
-      bloodId: { type: mongoose.Schema.Types.ObjectId, ref: "Blood", required: true },
-      auctionType: { type: mongoose.Schema.Types.ObjectId, ref: "Blood", required: true },
-      bloodownerId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-      bloodGroup: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-      comments: {type: Object, default: 'Urgent'},
-      progress: { type: Number, default: 0 },
-      required: { type: Number },
-      status: { type: BloodRequestStatus, default: BloodRequestStatus.PENDING },
-      hospital: { type: mongoose.Schema.Types.ObjectId, ref: 'Hospital' },
-      volunteers: { type: Object },
-      createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: "User"
-      },
-      updatedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-      },
-      createdAt: { type: Date, default: new Date() },
-      updatedAt: { type: Date, default: new Date() }
-    },
-    { timestamps: true }
-  )
-  .set("toJSON", {
-    transform(doc, ret, options) {
-      ret.id = ret._id;
-      delete ret._id;
-      delete ret.__v;
-    }
-  });
+const requestSchema = new Schema({
+  comment: String,
+  progress: { type: String, default: '0' },
+  status: {
+    type: String,
+    default: 'start',
+    enum: ['start', 'accepted', 'rejected', 'pending', 'completed']
+  },
+  date: Date,
+  user: { type: ObjectId, ref: 'User' },
+  hospital: { type: ObjectId, ref: 'Hospital' },
+  createdAt: { type: Date, default: new Date() },
+  updatedAt: { type: Date, default: new Date() }
+});
 
-const Request = mongoose.model("Request", bloodRequestSchema);
+const request = model('request', requestSchema);
 
-module.exports = {
-  Request,
-  schema: bloodRequestSchema,
-  BloodRequestStatus
-};
+module.exports = request;

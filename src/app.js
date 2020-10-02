@@ -8,12 +8,16 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
-
+const AdminBro = require('admin-bro');
+const AdminBroExpressjs = require('admin-bro-expressjs');
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
 
 const User = require('./models/user');
 const routes = require('./routes/index');
+
+// We have to tell AdminBro that we will manage mongoose resources with it
+AdminBro.registerAdapter(require('admin-bro-mongoose'))
 
 const router = express.Router();
 routes(router);
