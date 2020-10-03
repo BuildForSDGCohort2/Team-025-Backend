@@ -47,8 +47,4 @@ const bloodRequestSchema = mongoose
 
 const Request = mongoose.model('Request', bloodRequestSchema);
 
-module.exports = {
-  Request,
-  schema: bloodRequestSchema,
-  BloodRequestStatus
-};
+module.exports = Request;
