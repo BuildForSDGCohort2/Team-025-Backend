@@ -49,5 +49,3 @@ const Request = mongoose.model('Request', bloodRequestSchema);
 
 
 module.exports = { Request, BloodRequestStatus };
-module.exports = Request;
-
