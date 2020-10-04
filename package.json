@@ -34,6 +34,9 @@
   "license": "MIT",
   "dependencies": {
     "accesscontrol": "^2.2.1",
+    "admin-bro": "^3.2.5",
+    "admin-bro-expressjs": "^2.1.1",
+    "admin-bro-mongoose": "^0.5.2",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "connect-flash": "^0.1.1",
@@ -42,12 +45,14 @@
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-formidable": "^1.2.0",
     "express-router": "^0.0.1",
     "express-session": "^1.17.1",
     "flash": "^1.1.0",
     "googleapis": "^59.0.0",
     "graphql": "^0.13.2",
     "http-errors": "~1.6.3",
+    "http-status-codes": "^2.1.4",
     "jade": "~1.11.0",
     "jsdom": "^16.4.0",
     "jsonwebtoken": "^8.5.1",
@@ -89,8 +94,7 @@
     "delay": "2500",
     "env": {
       "NODE_ENV": "development",
-      "PORT": 4000,
-      "DBNAME": "bloodnation"
+      "PORT": 4000
     }
   }
 }

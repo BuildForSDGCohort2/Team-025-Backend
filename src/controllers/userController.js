@@ -4,6 +4,9 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const auth = require('../middleware/auth');
 const { sendVerificationMail } = require('../services/mail');
+const { Request } = require('../models/request');
+const Appointment = require('../models/appointment');
+
 
 async function hashPassword(password) {
   return await bcrypt.hash(password, 10);
@@ -156,6 +159,28 @@ exports.getUsers = async (req, res, next) => {
   const users = await User.find({});
   res.status(200).json({
     data: users
+  });
+};
+
+exports.getStatistics = async (req, res, next) => {
+  const requests = await Request.countDocuments({
+    bloodReceiverId: res.locals.loggedInUser._id
+  });
+  const donations = await Appointment.countDocuments({
+    user: res.locals.loggedInUser._id
+  });
+  const lastDonation = await Appointment.findOne({
+    user: res.locals.loggedInUser._id
+  }).sort({ createdAt: -1 });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      bloodGroup: res.locals.loggedInUser.bloodGroup,
+      requests,
+      donations,
+      lastDonation
+    }
   });
 };
 

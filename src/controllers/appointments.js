@@ -5,7 +5,7 @@ const appointmentController = {
   all(req, res) {
     // Returns all appointments of user
     const user = res.locals.loggedInUser;
-    Appointment.find({ user: user._id }).populate('hospital').exec((err, appointments) => res.status(201).json({
+    Appointment.find({ user: user._id }).populate('hospital beneficiary').exec((err, appointments) => res.status(201).json({
       status: 'success',
       message: 'appointment successful',
       data: appointments
@@ -15,14 +15,15 @@ const appointmentController = {
     // Returns all appointments of user
     const user = res.locals.loggedInUser;
     const { id } = req.params;
-    Appointment.findOne({ user: user._id, _id: id }).populate('hospital').exec((err, appointment) => res.status(201).json({
+    Appointment.findOne({ user: user._id, _id: id }).populate('hospital beneficiary').exec((err, appointment) => res.status(201).json({
       status: 'success',
       message: 'appointment successful',
       data: appointment
     }));
   },
   create(req, res) {
-    const { state, lg, hospital, date, comment, type
+    const {
+      state, lg, hospital, date, comment, type
     } = req.body;
     const user = res.locals.loggedInUser;
 
@@ -55,7 +56,7 @@ const appointmentController = {
       // after a successful save
       Appointment.find({ _id: saved._id })
         .populate('hospital')
-        .exec((err, appointment) => res.status(200).json({
+        .exec((_err, appointment) => res.status(200).json({
           status: 'success',
           message: 'successfully',
           appointment
@@ -64,10 +65,12 @@ const appointmentController = {
       const from = 'Vonage APIs';
       const to = '2348079398930';
 
-      nexmo.message.sendSms(from, to, msg, (err, responseData) => {
-        if (err) {
-          console.log(err);
+      nexmo.message.sendSms(from, to, msg, (error, responseData) => {
+        if (error) {
+          // eslint-disable-next-line no-console
+          console.log(error);
         } else {
+          // eslint-disable-next-line no-console
           console.dir(responseData);
         }
       });
