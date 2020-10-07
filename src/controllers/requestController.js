@@ -487,37 +487,23 @@ const notDonated = async (req, res) => {
 };
 
 /**
- * @route POST api/v1/request/{request_id}
+ * @route POST api/v1/comment/{request_id}
  * @desc Update a request status to completed
  *  @access Public
  */
 // router.post('/request/:request_id',
-const completeRequest = async (req, res) => {
-  const { requestId } = req.params;
+const updateRequestStatus = async (req, res) => {
+  const { request_id } = req.params;
 
-  const appointment = await Appointment.findOneAndUpdate(
-    { _id: requestId },
-    { $set: { status: 'completed', progress: '100' } },
-    { new: true, useFindAndModify: false }
-  ).exec();
-
-  await Request.updateOne({ _id: ObjectId(requestId) },
-    { $set: {
-        status: BloodRequestStatus.COMPLETED,
-        appointment,
-        progress: 100 } }, (error, result) => {
-          if (error) {
-            res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-              status: 'error',
-              message: 'request not found',
-              error: []
-            });
-          } else {
-            res.status(httpStatus.OK).json({
-              status: 'success',
-              message: 'Request status completed'
-            });
-          }
+  await Request.updateOne({ _id: ObjectId(request_id) },
+    { $set: { status: BloodRequestStatus.COMPLETED } }, (error, result) => {
+      if (error) {
+        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error });
+      } else {
+        res.status(httpStatus.OK).json({
+          message: 'Request status updated succesfully'
+        });
+      }
     });
 };
 
@@ -535,8 +521,7 @@ const acceptRequest = async (req, res) => {
   } = req.body;
 
   // check if request exists and pending
-  const request = await Request.findOne({ _id: requestId,
-    status: BloodRequestStatus.PENDING }).populate('hospital');
+  const request = await Request.findOne({ _id: requestId, status: BloodRequestStatus.PENDING }).populate('hospital');
 
   if (!request) {
     return res.status(httpStatus.BAD_REQUEST).json({
@@ -587,64 +572,6 @@ const acceptRequest = async (req, res) => {
     });
 };
 
-
-/**
- * @route POST api/v1/request/{request_id}
- * @desc Reject a request
- *  @access Public
- */
-// router.post('/request/:request_id',
-const rejectRequest = async (req, res) => {
-  const { requestId } = req.params;
-
-  const {
-    comment
-  } = req.body;
-
-  // check if request exists and pending
-  const request = await Request.findOne({ _id: requestId,
-    status: BloodRequestStatus.PENDING }).populate('hospital');
-
-  if (!request) {
-    return res.status(httpStatus.BAD_REQUEST).json({
-      status: 'error',
-      message: 'request not found',
-      error: []
-    });
-  }
-
-  const appointment = await Appointment.findOneAndUpdate(
-    { _id: requestId },
-    { $set: { status: 'rejected', progress: '25' } },
-    { new: true, useFindAndModify: false }
-  ).exec();
-
-  await Request.updateOne({ _id: ObjectId(requestId), status: BloodRequestStatus.PENDING },
-    {
-      $set: {
-        status: BloodRequestStatus.DECLINED,
-        bloodOwnerId: res.locals.loggedInUser._id,
-        progress: 25,
-        appointment,
-        comment
-        // hospital: request.hospital._id,
-        // bloodOwnerBloodGroup: res.locals.loggedInUser.bloodGroup
-      }
-    }, (error, result) => {
-      if (error) {
-        res.status(httpStatus.INTERNAL_SERVER_ERROR).json({
-          status: 'error',
-          error
-        });
-      } else {
-        res.status(httpStatus.OK).json({
-          status: 'success',
-          message: 'request declined'
-        });
-      }
-    });
-};
-
 /**
  * @route GET api/v1/blood_id/requests
  * @desc All Request for hospital
@@ -688,8 +615,6 @@ module.exports = {
   // notDonated,
   // updateRequestStatus,
   acceptRequest,
-  rejectRequest,
-  completeRequest,
   getRequest,
   getAllRequests,
   getPublicRequest,
