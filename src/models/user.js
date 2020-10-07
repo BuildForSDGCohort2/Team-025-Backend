@@ -83,6 +83,16 @@ const UserSchema = new Schema({
   accessToken: {
     type: String
   },
+  resetPasswordToken: {
+    type: String,
+    required: false
+  },
+
+  resetPasswordExpires: {
+    type: Date,
+    required: false
+  },
+
   appointments: [{
     type: Schema.Types.ObjectId,
     ref: 'Appointment'
