@@ -175,7 +175,10 @@ const getRequest = async (req, res) => {
       bloodReceiverId: res.locals.loggedInUser._id
     })
       .populate('bloodId', 'price shortLocation status', null, { sort: { createdAt: -1 } })
-      .populate('createdBy', 'firstName lastName', null, { sort: { createdAt: -1 } });
+      .populate('createdBy', 'firstname lastname', null, { sort: { createdAt: -1 } })
+      .populate('hospital', 'name address state lg latitude longitude email phone ', null, { sort: { createdAt: -1 } })
+      .populate('bloodOwnerId', 'firstname lastname phone email address state lg', null, { sort: { createdAt: -1 } })
+      .populate('appointment');
     return res.status(httpStatus.OK).json({
       message: 'success',
       data: bloodRequest
@@ -537,6 +540,8 @@ const acceptRequest = async (req, res) => {
     type: 'receiver',
     beneficiary: request.bloodReceiverId,
     comment,
+    status: 'accepted',
+    progress: '50',
     date
   });
 
