@@ -13,19 +13,10 @@ const authRoute = (router) => {
   router.route('/verification/email/resend')
     .post(userController.reSendVerification);
 
-  router.route('/recover')
-    .post(userController.recover);
-
-  router.route('/reset/:token')
-    .get(userController.reset);
-
-  router.route('/reset/:token')
-    .post(userController.resetPassword);
-
   router.route('/logout')
     .get((req, res) => {
       res.render('index', { title: 'You have logged out' });
-    });
-};
+    })
+  }
 
 module.exports = authRoute;
