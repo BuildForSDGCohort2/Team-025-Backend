@@ -38,13 +38,10 @@ const appointmentController = {
       date
     });
 
-    const credentials ={
-      apiKey: '8d2e5a2e051a28cb61d611241976d74f74196a1fcca23a5302030be0fc6f386a2',
-      apiSecret: 'bloodnation'
-    };
-
-    const AfricasTalking = require('africastalking')(credentials);
-    const sms = AfricasTalking.SMS;
+    const nexmo = new Nexmo({
+      apiKey: '41929a6c',
+      apiSecret: 'YvX2lYk6utkevmfaI'
+    });
 
     const msg = `${user.name
     } `
@@ -65,23 +62,20 @@ const appointmentController = {
           appointment
         }));
 
-      // const from = 'Vonage APIs';
+      const from = 'Vonage APIs';
       const to = '2348079398930';
 
-      sms.send({ to, message, enque: true })
-      .then(response => {
-          console.log(response);
-          res.json(response);
-      })
-      .catch(error => {
+      nexmo.message.sendSms(from, to, msg, (error, responseData) => {
+        if (error) {
+          // eslint-disable-next-line no-console
           console.log(error);
-          res.json(error.toString());
+        } else {
+          // eslint-disable-next-line no-console
+          console.dir(responseData);
+        }
       });
-        
-      });
-  
+    });
   }
-}
-
+};
 
 module.exports = appointmentController;
