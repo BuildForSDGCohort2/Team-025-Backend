@@ -2,6 +2,7 @@ const userController = require('../controllers/userController');
 const auth = require('../middleware/auth');
 const { emailVerificationMiddleware } = require('../middleware/emailVerificationMiddleware');
 const { roles } = require('../roles');
+const { UserRole } = require('../models/user')
 
 const userRoutes = (router) => {
 
@@ -11,11 +12,11 @@ const userRoutes = (router) => {
     .get(auth.allowIfLoggedin, auth.grantAccess('readAny', 'profile'), userController.getUsers);
 
   router.route('/users/statistics')
-    .get(auth.allowIfLoggedin, auth.grantAccess(roles.can('user').updateOwn('profile')), userController.getStatistics);
+    .get(auth.allowIfLoggedin, auth.grantAccess(roles.can(UserRole.User).updateOwn('profile')), userController.getStatistics);
 
   router.route('/users/:userId')
     .get(auth.allowIfLoggedin, userController.getUser)
-    .post(auth.allowIfLoggedin, auth.grantAccess(roles.can('user').updateOwn('profile')), userController.updateUser)
+    .post(auth.allowIfLoggedin, auth.grantAccess(roles.can(UserRole.User).updateOwn('profile')), userController.updateUser)
     .delete(auth.allowIfLoggedin, auth.grantAccess('deleteAny', 'profile'), userController.deleteUser);
 };
 
