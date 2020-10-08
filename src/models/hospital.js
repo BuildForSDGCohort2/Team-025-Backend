@@ -30,46 +30,9 @@ const HospitalSchema = new Schema(
     },
     latitude: String,
     longitude: String,
-    bloodId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Blood'
-    },
-    bloodOwnerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    bloodReceiverId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    availableBloodQuantity: {
-      type: Number,
-      default: 0
-    },
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      required: true,
-      ref: "User"
-    },
-    updatedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User"
-    },
-    createdAt: {
-      type: Date,
-      default: new Date()
-    },
-    updatedAt: {
-      type: Date,
-      default: new Date()
-    },
     appointments: [{
       type: Schema.Types.ObjectId,
       ref: 'Appointment'
-    }],
-    requests: [{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Request'
     }]
   }
 );
