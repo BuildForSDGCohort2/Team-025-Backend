@@ -1,9 +1,9 @@
 const AccessControl = require('accesscontrol');
-const { UserRole } = require('./models/user');
+const { UserRole } = require("../src/models/user");
 
 const ac = new AccessControl();
 
-exports.roles = (() => {
+exports.roles = (function () {
   ac.grant(UserRole.User)
     .readOwn('profile')
     .updateOwn('profile');
@@ -19,4 +19,4 @@ exports.roles = (() => {
     .deleteAny('profile');
 
   return ac;
-});
+}());
