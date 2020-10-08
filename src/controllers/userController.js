@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const auth = require('../middleware/auth');
 const { sendVerificationMail } = require('../services/mail');
+const {resetPasswordSuccess} = require('../services/resetPassword');
+const {resetPasswordmailer} = require('../services/resetPasswordmailer')
 const { Request } = require('../models/request');
 const Appointment = require('../models/appointment');
 
@@ -249,7 +251,7 @@ exports.recover = async (req, res) => {
 
     // Save the updated user object
     await user.save();
-
+    await resetPasswordmailer(user)
     res.status(200).json({
       status: 'success',
       message: `A reset email has been sent to ${user.email}.`
@@ -305,7 +307,7 @@ exports.resetPassword = async (req, res) => {
 
     // Save the updated user object
     await user.save();
-
+    await resetPassword(user)
 
     res.status(200).json({
       status: 'success',

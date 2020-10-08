@@ -2,12 +2,6 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const UserRole = {
-  User: "User",
-  Hospital: "Hospital",
-  Admin: "Admin"
-};
-
 const UserSchema = new Schema({
   email: {
     type: String,
@@ -76,9 +70,9 @@ const UserSchema = new Schema({
     default: 1
   },
   role: {
-    type: UserRole,
-    default: UserRole.User,
-    // enum: ['user', 'hosipital', 'admin']
+    type: String,
+    default: 'user',
+    enum: ['user', 'hosipital', 'admin']
   },
   accessToken: {
     type: String
@@ -91,7 +85,4 @@ const UserSchema = new Schema({
 
 const User = mongoose.model('User', UserSchema);
 
-module.exports = {
-  User,
-  UserRole
-};
+module.exports = User;
