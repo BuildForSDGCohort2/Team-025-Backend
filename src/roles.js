@@ -1,5 +1,5 @@
 const AccessControl = require('accesscontrol');
-const { UserRole } = require("../models/user");
+const { UserRole } = require('../src/models/user');
 
 const ac = new AccessControl();
 
