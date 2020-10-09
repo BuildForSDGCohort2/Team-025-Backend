@@ -2,14 +2,14 @@ const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models/user');
 
-exports.sendVerificationMail = async (user) => {
+exports.resetPasswordmailer = async (user) => {
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
     expiresIn: '1h'
   });
 
   const frontend = process.env.FRONTEND_DOMAIN;
 
-  const link = `${frontend}/verification/email?token=${token}&email=${user.email}`;
+  const link = `${frontend}/reset?token=${token}&email=${user.email}`;
 
   const transporter = nodemailer.createTransport({
     host: 'smtp-relay.sendinblue.com',
@@ -23,26 +23,17 @@ exports.sendVerificationMail = async (user) => {
       rejectUnauthorized: false
     }
   });
-
+  // this is the message body for mail when password change succcessfully
   const info = await transporter.sendMail({
     from: '"BloodNation 👻" <info@bloodnation.com>',
     to: user.email,
-    subject: 'Welcome to BloodNation',
-    // text: 'Hello world?',
+    subject: 'Password Reset',
     html: `
-    <h2 style="color: red;">Welcome to BloodNation</h2>
-    <p>Hey there,</p>
-
-    <p>My name is Dino, and I'm the Co-Founder of BloodNation.</p>
-
-    <p>I couldn't be happier to welcome you to the BloodNation community and to help you start donating blood across the nation.</p>
-
-    <p>No matter the distance or state you reside, you can be sure that you'll find the bloodbank or hospital that you need... and maybe a few that you didn't even know you needed yet!</p>
-
-    <p>Click this link to complete your registration <a href="${link}">Confirm Registration</a></p>
-
-    <p>Regards<br/>Dino Rhythms</p>
-    `
+        <p> You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
+        <p> Please click on the following link, or paste this into your browser to complete the process:
+        <a href="${link}"> Reset</a></p>
+        <p> If you did not request this, please ignore this email and your password will remain unchanged.</p>
+        `
   });
 
   await User.findByIdAndUpdate(user._id, { verificationToken: token });

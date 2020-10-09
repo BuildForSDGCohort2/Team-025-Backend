@@ -30,10 +30,14 @@ const HospitalSchema = new Schema(
     },
     latitude: String,
     longitude: String,
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
     appointments: [{
       type: Schema.Types.ObjectId,
       ref: 'Appointment'
     }]
   }
 );
-module.exports = mongoose.model('Hospital', HospitalSchema);
+
+const Hospital = mongoose.model('Hospital', HospitalSchema);
+
+module.exports = Hospital;

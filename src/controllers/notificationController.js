@@ -1,4 +1,5 @@
-const httpStatus = require("http-status-codes");
+const httpStatus = require('http-status-codes');
+const debug = require('debug')('app:notificationContoller');
 const { Notification } = require("../models/notification");
 
 const getNotifications = async (req, res) => {

@@ -25,7 +25,7 @@ const authRoute = (router) => {
   router.route('/logout')
     .get((req, res) => {
       res.render('index', { title: 'You have logged out' });
-    })
-  }
+    });
+};
 
 module.exports = authRoute;

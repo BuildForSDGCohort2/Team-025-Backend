@@ -13,11 +13,11 @@ const AdminBroExpressjs = require('admin-bro-expressjs');
 const flash = require('connect-flash');
 const bodyParser = require('body-parser');
 
-const User = require('./models/user');
+const { User } = require('./models/user');
 const routes = require('./routes/index');
 
 // We have to tell AdminBro that we will manage mongoose resources with it
-AdminBro.registerAdapter(require('admin-bro-mongoose'))
+AdminBro.registerAdapter(require('admin-bro-mongoose'));
 
 const router = express.Router();
 routes(router);
@@ -28,16 +28,18 @@ const app = express();
 
 // Database Connection
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGO_URL,
-  {
+mongoose
+  .connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false
-  }).then(() => {
-  console.log('Database Connected Successfully');
-}).catch((err) => {
-  console.log('error in connecting database', err);
-});
+  })
+  .then(() => {
+    console.log('Database Connected Successfully');
+  })
+  .catch((err) => {
+    console.log('error in connecting database', err);
+  });
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -51,28 +53,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(flash());
 app.use(cors());
 
-// app.use(async (req, res, next) => {
-//   if (req.headers['x-access-token']) {
-//     const accessToken = req.headers['x-access-token'];
-//     const { userId, exp } = await jwt.verify(accessToken, process.env.JWT_SECRET);
-//     // Check if token has expired
-//     if (exp < Date.now().valueOf() / 1000) {
-//       return res.status(401).json({ error: 'JWT token has expired, please login to obtain a new one' });
-//     }
-//     res.locals.loggedInUser = await User.findById(userId); next();
-//   } else {
-//     next();
-//   }
-// });
-
 /**  Passport Config */
 
 app.use(passport.initialize());
 
-
 app.use('/api/v1', router);
 // app.use('/users', usersRouter);
-
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

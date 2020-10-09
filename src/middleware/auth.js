@@ -3,7 +3,7 @@ const { messages } = require('../utils/messages');
 
 // const { roles } = require('../roles');
 
-const User = require('../models/user');
+const { User } = require('../models/user');
 
 exports.grantAccess = (permission) => async (req, res, next) => {
   try {
@@ -18,14 +18,13 @@ exports.grantAccess = (permission) => async (req, res, next) => {
   }
 };
 
-const {
-  invalidToken, noToken
-} = messages;
+const { invalidToken, noToken } = messages;
 
-const errorResponse = (res, status, statusMessage, error) => res.status(status).json({
-  status: statusMessage,
-  error
-});
+const errorResponse = (res, status, statusMessage, error) =>
+  res.status(status).json({
+    status: statusMessage,
+    error
+  });
 
 exports.allowIfLoggedin = async (req, res, next) => {
   const token = req.headers['x-access-token'];
