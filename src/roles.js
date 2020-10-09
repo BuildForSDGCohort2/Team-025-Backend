@@ -1,20 +1,19 @@
 const AccessControl = require('accesscontrol');
-const { UserRole } = require('../src/models/user');
 
 const ac = new AccessControl();
 
 exports.roles = (function () {
-  ac.grant(UserRole.User)
+  ac.grant('user')
     .readOwn('profile')
     .updateOwn('profile');
 
-  ac.grant(UserRole.Hospital)
-    .extend(UserRole.User)
+  ac.grant('hospital')
+    .extend('user')
     .readAny('profile');
 
-  ac.grant(UserRole.Admin)
-    .extend(UserRole.User)
-    .extend(UserRole.Hospital)
+  ac.grant('admin')
+    .extend('user')
+    .extend('hospital')
     .updateAny('profile')
     .deleteAny('profile');
 

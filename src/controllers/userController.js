@@ -4,8 +4,11 @@ const bcrypt = require('bcrypt');
 const User = require('../models/user');
 const auth = require('../middleware/auth');
 const { sendVerificationMail } = require('../services/mail');
+const { resetPasswordSuccess } = require('../services/resetPassword');
+const { resetPasswordmailer } = require('../services/resetPasswordmailer');
 const { Request } = require('../models/request');
 const Appointment = require('../models/appointment');
+const { verifyToken } = require('../utils/authHelper');
 
 
 async function hashPassword(password) {
@@ -228,5 +231,114 @@ exports.deleteUser = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+exports.recover = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({
+        status: 'error',
+        message: `The email address ${req.body.email} is not associated with any account. `,
+        date: []
+      });
+    }
+
+
+    // Save the updated user object
+    await user.save();
+    await resetPasswordmailer(user);
+    res.status(200).json({
+      status: 'success',
+      message: `A reset email has been sent to ${user.email}.`
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.reset = async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    if (!token) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'Password reset token is required.',
+        date: []
+      });
+    }
+
+    const decoded = await verifyToken(token);
+    const user = await User.findOne({ _id: decoded.userId });
+
+    if (!user) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'Password reset token is invalid or has expired.',
+        date: []
+      });
+    }
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'token is valid',
+      date: []
+    });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    if (!token) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'Password reset token is required.',
+        date: []
+      });
+    }
+
+    if (!password) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'Password is required.',
+        date: []
+      });
+    }
+
+    const decoded = await verifyToken(token);
+    const user = await User.findOne({ _id: decoded.userId });
+
+    if (!user) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'Password reset token is invalid or has expired.',
+        date: []
+      });
+    }
+
+    // Set the new password
+    user.password = await hashPassword(password);
+    user.verificationToken = '';
+
+    // Save the updated user object
+    await user.save();
+    // await resetPassword(user)
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Your password has been updated.'
+    });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.message });
   }
 };

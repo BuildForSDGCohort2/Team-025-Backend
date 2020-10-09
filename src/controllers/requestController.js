@@ -206,11 +206,11 @@ const getPublicRequest = async (req, res) => {
       ]
     })
       .populate('bloodId', 'price shortLocation status', null, { sort: { createdAt: -1 } })
-      .populate('createdBy', 'firstname lastname email phone', null, { sort: { createdAt: -1 } })
-      .populate('bloodOwnerId', 'firstname lastname email phone', null, { sort: { createdAt: -1 } })
-      .populate('bloodReceiverId', 'firstname lastname email phone', null, { sort: { createdAt: -1 } })
+      .populate('createdBy', 'firstname lastname email phone state lg address', null, { sort: { createdAt: -1 } })
+      .populate('bloodOwnerId', 'firstname lastname email phone state lg address', null, { sort: { createdAt: -1 } })
+      .populate('bloodReceiverId', 'firstname lastname email phone state lg address', null, { sort: { createdAt: -1 } })
       .populate('appointment', 'createdAt', null, { sort: { createdAt: -1 } })
-      .populate('hospital', 'state lg name phone email', null, { sort: { createdAt: -1 } });
+      .populate('hospital', 'state lg name phone email address', null, { sort: { createdAt: -1 } });
     return res.status(httpStatus.OK).json({
       message: 'success',
       data: bloodRequest
@@ -311,9 +311,9 @@ const getAllPublicRequests = async (_req, res) => {
       .where('bloodReceiverId')
       .ne(res.locals.loggedInUser._id)
       .populate('bloodId', 'price shortLocation status', null, { sort: { createdAt: -1 } })
-      .populate('createdBy', 'firstname lastname', null, { sort: { createdAt: -1 } })
-      .populate('bloodReceiverId', 'firstname lastname phone', null, { sort: { createdAt: -1 } })
-      .populate('hospital', 'name state phone lg', null, { sort: { createdAt: -1 } });
+      .populate('createdBy', 'firstname lastname email phone state lg address', null, { sort: { createdAt: -1 } })
+      .populate('bloodReceiverId', 'firstname lastname email phone state lg address', null, { sort: { createdAt: -1 } })
+      .populate('hospital', 'name state phone email lg address', null, { sort: { createdAt: -1 } });
 
     return res.status(httpStatus.OK).json({
       status: 'success',
