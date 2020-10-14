@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
+const UserRole = {
+  User: 'user',
+  Hospital: 'hospital',
+  Admin: 'admin'
+};
+
 const UserSchema = new Schema({
   email: {
     type: String,
@@ -69,20 +75,31 @@ const UserSchema = new Schema({
     type: Number,
     default: 1
   },
+  // role: {
+  //   type: String,
+  //   default: 'user',
+  //   enum: ['user', 'hosipital', 'admin']
+  // },
   role: {
-    type: String,
-    default: 'user',
-    enum: ['user', 'hosipital', 'admin']
+    type: UserRole,
+    default: UserRole.User
   },
   accessToken: {
     type: String
   },
-  appointments: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Appointment'
-  }]
+  appointments: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Appointment'
+    }
+  ]
 });
 
 const User = mongoose.model('User', UserSchema);
 
-module.exports = User;
+// module.exports = User;
+
+module.exports = {
+  User,
+  UserRole
+};

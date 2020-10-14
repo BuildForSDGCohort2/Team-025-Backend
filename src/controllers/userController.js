@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const User = require('../models/user');
+const { User } = require('../models/user');
 const auth = require('../middleware/auth');
 const { sendVerificationMail } = require('../services/mail');
 const { resetPasswordSuccess } = require('../services/resetPassword');
@@ -9,7 +9,6 @@ const { resetPasswordmailer } = require('../services/resetPasswordmailer');
 const { Request } = require('../models/request');
 const Appointment = require('../models/appointment');
 const { verifyToken } = require('../utils/authHelper');
-
 
 async function hashPassword(password) {
   return await bcrypt.hash(password, 10);
@@ -247,7 +246,6 @@ exports.recover = async (req, res) => {
         date: []
       });
     }
-
 
     // Save the updated user object
     await user.save();

@@ -1,7 +1,6 @@
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
-
+const { User } = require('../models/user');
 
 exports.resetPasswordmailer = async (user) => {
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
@@ -34,7 +33,7 @@ exports.resetPasswordmailer = async (user) => {
         <p> Please click on the following link, or paste this into your browser to complete the process:
         <a href="${link}"> Reset</a></p>
         <p> If you did not request this, please ignore this email and your password will remain unchanged.</p>
-        `  
+        `
   });
 
   await User.findByIdAndUpdate(user._id, { verificationToken: token });

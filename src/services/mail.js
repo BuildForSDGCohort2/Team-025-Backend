@@ -1,9 +1,8 @@
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const { User } = require('../models/user');
 
 exports.sendVerificationMail = async (user) => {
-
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
     expiresIn: '1h'
   });

@@ -21,6 +21,7 @@ const AppointmentSchema = new Schema({
   beneficiary: { type: ObjectId, ref: 'User' },
   hospital: { type: ObjectId, ref: 'Hospital' },
   createdAt: { type: Date, default: new Date() },
+  bloodId: { type: ObjectId, ref: 'Blood' },
   updatedAt: { type: Date, default: new Date() }
 });
 
