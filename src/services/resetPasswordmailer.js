@@ -9,7 +9,7 @@ exports.resetPasswordmailer = async (user) => {
 
   const frontend = process.env.FRONTEND_DOMAIN;
 
-  const link = `${frontend}/reset?token=${token}&email=${user.email}`;
+  const link = `${frontend}/reset/password?token=${token}&email=${user.email}`;
 
   const transporter = nodemailer.createTransport({
     host: 'smtp-relay.sendinblue.com',
