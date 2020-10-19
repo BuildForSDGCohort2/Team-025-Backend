@@ -135,6 +135,7 @@ const getPublicRequest = async (req, res) => {
 const getAllRequests = async (_req, res) => {
   try {
     const bloodRequests = await Request.find({ bloodReceiverId: res.locals.loggedInUser._id })
+      .sort('-createdAt')
       .populate('bloodId', 'price shortLocation status', null, { sort: { createdAt: -1 } })
       .populate('hospital', 'name state phone lg', null, { sort: { createdAt: -1 } })
       .populate('createdBy', 'firstName lastName', null, { sort: { createdAt: -1 } });
@@ -160,18 +161,33 @@ const getAllRequests = async (_req, res) => {
  */
 const getAllPublicRequests = async (_req, res) => {
   try {
+    const compartibility = {
+      'A+': 'A+,A-,O+,O-',
+      'A-': 'A-,O-',
+      'B+': 'B+,B-,O+,O-',
+      'B-': 'B-,O-',
+      'AB+': 'A+,A-,O+,O-,B+,B-,AB+,AB-',
+      'AB-': 'AB-,A-,B-,O-',
+      'O+': 'O+,O-',
+      'O-': 'O-'
+    };
+    const condition = compartibility[res.locals.loggedInUser.bloodGroup];
+
     const bloodRequests = await Request.find({ status: BloodRequestStatus.PENDING })
       .where('bloodReceiverId')
       .ne(res.locals.loggedInUser._id)
+      .sort('-createdAt')
       .populate('bloodId', 'price shortLocation status', null, { sort: { createdAt: -1 } })
       .populate('createdBy', 'firstname lastname email phone state lg address', null, { sort: { createdAt: -1 } })
       .populate('bloodReceiverId', 'firstname lastname email phone state lg address', null, { sort: { createdAt: -1 } })
       .populate('hospital', 'name state phone email lg address', null, { sort: { createdAt: -1 } });
 
+    const request = bloodRequests.filter((reqt) => condition.includes(reqt.bloodGroup));
+
     return res.status(httpStatus.OK).json({
       status: 'success',
       message: 'Success',
-      data: bloodRequests
+      data: request
     });
   } catch (error) {
     debug(error);
@@ -192,7 +208,7 @@ const getMyRequests = async (req, res) => {
   const { createdBy } = req.params;
   createdBy = req.user.email;
 
-  const requests = await Request.find({ createdBy }).sort({ _id: -1 });
+  const requests = await Request.find({ createdBy }).sort({ createdAt: -1 });
 
   if (!requests) {
     return res.status(httpStatus.CONFLICT).json({

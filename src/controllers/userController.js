@@ -255,7 +255,7 @@ exports.recover = async (req, res) => {
       message: `A reset email has been sent to ${user.email}.`
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: 'Sorry we could not send the reset link, try after sometime.' });
   }
 };
 

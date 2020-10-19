@@ -10,7 +10,7 @@ const debug = require('debug')('app:requestContoller');
 const all = (req, res) => {
   // Returns all appointments of user
   const user = res.locals.loggedInUser;
-  Appointment.find({ user: user._id }).populate('hospital beneficiary').exec((err, appointments) => res.status(201).json({
+  Appointment.find({ user: user._id }).sort('-createdAt').populate('hospital beneficiary').exec((err, appointments) => res.status(201).json({
     status: 'success',
     message: 'appointment successful',
     data: appointments
@@ -21,7 +21,7 @@ const allHBank = async (req, res) => {
   const user = res.locals.loggedInUser;
   const hospital = await Hospital.findOne({ user: user._id });
 
-  Blood.find({ hospital: hospital._id }).populate('hospital beneficiary donor appointment').exec((err, banks) => res.status(200).json({
+  Blood.find({ hospital: hospital._id }).sort('-createdAt').populate('hospital beneficiary donor appointment').exec((err, banks) => res.status(200).json({
     status: 'success',
     message: 'banks successful',
     data: banks
@@ -32,6 +32,7 @@ const allHAppointments = async (req, res) => {
   const user = res.locals.loggedInUser;
   const hospital = await Hospital.findOne({ user: user._id });
   const appointments = await Appointment.find({ hospital: hospital._id })
+    .sort('-createdAt')
     .populate('user', 'firstname lastname email phone state lg address bloodGroup', null, { sort: { createdAt: -1 } })
     .populate('beneficiary', 'firstname lastname email phone state lg address', null, { sort: { createdAt: -1 } })
     .populate('hospital', 'name state phone email lg address', null, { sort: { createdAt: -1 } });
@@ -46,7 +47,7 @@ const allHAppointments = async (req, res) => {
 const allHPendingRequests = async (req, res) => {
   const user = res.locals.loggedInUser;
   const hospital = await Hospital.findOne({ user: user._id });
-  const requests = await Request.find({ hospital: hospital._id, status: BloodRequestStatus.PENDING })
+  const requests = await Request.find({ hospital: hospital._id, status: BloodRequestStatus.PENDING }).sort('-createdAt')
     .populate('bloodReceiverId', 'firstname lastname email phone state lg address bloodGroup', null, { sort: { createdAt: -1 } });
 
   return res.status(200).json({
@@ -55,7 +56,6 @@ const allHPendingRequests = async (req, res) => {
     data: requests
   });
 };
-
 
 const oneHAppointment = async (req, res) => {
   const user = res.locals.loggedInUser;

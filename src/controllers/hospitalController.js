@@ -30,7 +30,7 @@ exports.one = async (req, res) => {
 exports.byLg = async (req, res) => {
   try {
     const { lg } = req.params;
-    const hospitals = await Hospital.find({ lg });
+    const hospitals = await Hospital.find({ lg }).sort('name');
     if (!hospitals) {
       return res.status(401).json({
         status: 'error',
@@ -54,7 +54,7 @@ exports.byLg = async (req, res) => {
 
 exports.all = async (req, res) => {
   try {
-    const hospital = await Hospital.find();
+    const hospital = await Hospital.find().sort('state lg name');
     if (!hospital) {
       return res.status(401).json({
         status: 'error',
